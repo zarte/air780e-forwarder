@@ -80,11 +80,10 @@ sms.setNewSmsCb(
         -- 发送通知
         util_notify.add(
             {
-                sms_content,
-                "",
-                "发件号码: " .. sender_number,
-                "发件时间: " .. time,
-                "#SMS" .. (is_sms_ctrl and " #CTRL" or "")
+                sms_content
+                -- "tel: " .. sender_number,
+                -- "time: " .. time
+                -- "#SMS" .. (is_sms_ctrl and " #CTRL" or "")
             }
         )
     end

@@ -1,12 +1,19 @@
 return {
     -- 通知类型, 支持配置多个
     -- NOTIFY_TYPE = {"telegram", "pushdeer", "bark", "dingtalk", "feishu", "wecom", "pushover", "inotify", "next-smtp-proxy"},
-    NOTIFY_TYPE = "pushdeer",
+    NOTIFY_TYPE = {"sms","selfapi"},
     --
     -- telegram 通知配置, https://github.com/0wQ/telegram-notify
     TELEGRAM_PROXY_API = "",
     TELEGRAM_TOKEN = "",
     TELEGRAM_CHAT_ID = "",
+
+    -- sms 短信
+    REC_TEL_NUMBER = "13645091184",
+    --
+    -- selfapi 自定义接口
+    SELF_API = "http://demo.heybutterfly.com/testapi.php",
+    SELF_API_KEY = "cptbtptp",
     --
     -- pushdeer 通知配置, https://www.pushdeer.com/
     PUSHDEER_API = "https://api2.pushdeer.com/message/push",
@@ -35,9 +42,9 @@ return {
     NEXT_SMTP_PROXY_API = "",
     NEXT_SMTP_PROXY_USER = "",
     NEXT_SMTP_PROXY_PASSWORD = "",
-    NEXT_SMTP_PROXY_HOST = "smtp-mail.outlook.com",
-    NEXT_SMTP_PROXY_PORT = 587,
-    NEXT_SMTP_PROXY_FORM_NAME = "Air780E",
+    NEXT_SMTP_PROXY_HOST = "smtp.qq.com",
+    NEXT_SMTP_PROXY_PORT = 465,
+    NEXT_SMTP_PROXY_FORM_NAME = "",
     NEXT_SMTP_PROXY_TO_EMAIL = "",
     NEXT_SMTP_PROXY_SUBJECT = "来自 Air780E 的通知",
     --
@@ -54,7 +61,7 @@ return {
     NOTIFY_APPEND_MORE_INFO = true,
     --
     -- 通知最大重发次数
-    NOTIFY_RETRY_MAX = 100,
+    NOTIFY_RETRY_MAX = 2,
     --
     -- 开启低功耗模式, USB 断开连接无法查看日志, RNDIS 网卡会断开
     LOW_POWER_MODE = false,

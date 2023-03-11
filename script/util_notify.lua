@@ -31,6 +31,49 @@ local notify = {
         log.info("util_notify", "POST", config.TELEGRAM_PROXY_API)
         return util_http.fetch(nil, "POST", config.TELEGRAM_PROXY_API, header, msg)
     end,
+    -- 发送到 sms
+    ["sms"] = function(msg)
+        if config.REC_TEL_NUMBER == nil or config.REC_TEL_NUMBER == "" then
+            log.error("util_notify", "未配置 `config.REC_TEL_NUMBER`")
+            return
+        end
+        log.info("util_notify", "send sms", config.REC_TEL_NUMBER)
+        local res = sms.send(config.REC_TEL_NUMBER, msg)
+        if res then
+             return 200, "", "send sms success"
+        else
+             return nil, "", "send sms false"
+        end
+
+    end,
+    -- 发送到 自定义api
+    ["selfapi"] = function(msg)
+        if config.SELF_API == nil or config.SELF_API == "" then
+            log.error("util_notify", "未配置 `config.SELF_API`")
+            return
+        end
+
+        if config.SELF_API_KEY == nil or config.SELF_API_KEY == "" then
+            log.error("util_notify", "未配置 `config.SELF_API_KEY`")
+            return
+        end
+
+        local header = {
+            ["Content-Type"] = "application/json; charset=utf-8"
+        }
+        local body = {
+            msgtype = "text",
+            key = config.SELF_API_KEY,
+            text = {
+                content = msg
+            }
+        }
+        local json_data = json.encode(body)
+        -- LuatOS Bug, json.encode 会将 \n 转换为 \b
+        json_data = string.gsub(json_data, "\\b", "\\n")
+        log.info("util_notify", "POST", config.SELF_API)
+        return util_http.fetch(nil, "POST", config.SELF_API, header, json_data)
+    end,
     -- 发送到 pushdeer
     ["pushdeer"] = function(msg)
         if config.PUSHDEER_API == nil or config.PUSHDEER_API == "" then
@@ -308,10 +351,12 @@ function util_notify.send(msg, channel)
     end
 
     -- 通知内容追加更多信息
-    if config.NOTIFY_APPEND_MORE_INFO then
+    if config.NOTIFY_APPEND_MORE_INFO and msg == "#BOOT" then
         msg = msg .. append()
     end
-
+    if channel == "sms" then
+        msg = string.sub(msg,0,100)
+    end
     -- 发送通知
     local code, headers, body = notify[channel](msg)
     if code == nil then
